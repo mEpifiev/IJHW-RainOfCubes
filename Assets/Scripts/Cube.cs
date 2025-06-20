@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -7,12 +8,11 @@ public class Cube : MonoBehaviour
     private const float MinDelay = 2f;
     private const float MaxDelay = 5f;
 
-    [SerializeField] private Color _color;
+    [SerializeField] private ColorChanger _colorChanger;
 
     private bool _isTouched;
 
-    private CubePool _cubePool;
-    private Renderer _renderer;
+    public event Action<Cube> Released;
 
     private void OnEnable()
     {
@@ -21,12 +21,7 @@ public class Cube : MonoBehaviour
 
     private void Awake()
     {
-        _renderer = GetComponent<Renderer>();
-    }
-
-    public void Initialize(CubePool cubePool)
-    {
-        _cubePool = cubePool;
+        _colorChanger = GetComponent<ColorChanger>();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -38,17 +33,17 @@ public class Cube : MonoBehaviour
             return;
 
         _isTouched = true;
-        _renderer.material.color = _color;
+        _colorChanger.Change();
 
         StartCoroutine(Destroy());
     }
 
     private IEnumerator Destroy()
     {
-        float randomDelay = Random.Range(MinDelay, MaxDelay + 1f);
+        float randomDelay = UnityEngine.Random.Range(MinDelay, MaxDelay + 1f);
 
         yield return new WaitForSeconds(randomDelay);
 
-        _cubePool.Release(this);
+        Released?.Invoke(this);
     }
 }

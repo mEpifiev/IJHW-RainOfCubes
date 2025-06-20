@@ -15,10 +15,10 @@ public class CubePool : MonoBehaviour
             createFunc: Create,
             actionOnGet: (cube) => cube.gameObject.SetActive(true),
             actionOnRelease: (cube) => cube.gameObject.SetActive(false),
-            actionOnDestroy: Destroy,
+            actionOnDestroy: (cube) => Destroy(cube),
             collectionCheck: true,
             defaultCapacity: _capacity,
-            maxSize: _maxSize);
+            maxSize: _maxSize); ;
     }
 
     public Cube Get() => _pool.Get();
@@ -27,9 +27,17 @@ public class CubePool : MonoBehaviour
 
     private Cube Create()
     {
-        Cube newCube = Instantiate(_prefab);
-        newCube.Initialize(this);
+        Cube cube = Instantiate(_prefab);
 
-        return newCube;
+        cube.Released += Release;
+
+        return cube;
+    }
+
+    private void Destroy(Cube cube)
+    {
+        cube.Released -= Release;
+
+        Destroy(cube.gameObject);
     }
 }
