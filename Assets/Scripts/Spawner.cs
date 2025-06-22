@@ -10,8 +10,6 @@ public class Spawner : MonoBehaviour
 
     private bool _isSpawning = true;
 
-    private WaitForSeconds _wait;
-
     private void Start()
     {
         StartCoroutine(Spawn());
