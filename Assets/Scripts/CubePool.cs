@@ -18,7 +18,7 @@ public class CubePool : MonoBehaviour
             actionOnDestroy: (cube) => Destroy(cube),
             collectionCheck: true,
             defaultCapacity: _capacity,
-            maxSize: _maxSize); ;
+            maxSize: _maxSize); 
     }
 
     public Cube Get() => _pool.Get();
