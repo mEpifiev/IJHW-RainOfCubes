@@ -1,25 +1,20 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(ExplodeView))]
 public class Exploder : MonoBehaviour
 {
     [SerializeField] private float _explosionRadius = 5f;
     [SerializeField] private float _explosionForce = 350f;
 
-    private ExplodeView _view;
-
-    private void Awake()
-    {
-        _view = GetComponent<ExplodeView>();
-    }
+    public event Action Exploded;
 
     public void Explode()
     {
         foreach (Rigidbody hit in GetExplodableObjects())
             hit.AddExplosionForce(_explosionForce, transform.position, _explosionRadius);
 
-        _view.Play();
+        Exploded?.Invoke();
     }
 
     private List<Rigidbody> GetExplodableObjects()

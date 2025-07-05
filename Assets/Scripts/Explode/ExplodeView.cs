@@ -1,10 +1,28 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(Exploder))]
 public class ExplodeView : MonoBehaviour
 {
     [SerializeField] private ParticleSystem _effect;
 
-    public void Play()
+    private Exploder _exploder;
+
+    private void Awake()
+    {
+        _exploder = GetComponent<Exploder>();
+    }
+
+    private void OnEnable()
+    {
+        _exploder.Exploded += OnExploded;
+    }
+
+    private void OnDisable()
+    {
+        _exploder.Exploded -= OnExploded;
+    }
+
+    public void OnExploded()
     {
         if (_effect == null)
             return;
